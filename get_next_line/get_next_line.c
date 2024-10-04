@@ -28,7 +28,7 @@ char	*set_line(char *line_buffer)
 		free(left_str);
 		return (NULL);
 	}
-	line[i++] = '\0';
+	left_str[i++] = '\0';
 	return (left_str);
 }
 
@@ -75,6 +75,6 @@ char	*get_next_line(int fd)
 	line = fill_line_buffer(fd, left_str, buffer);
 	if (!line)
 		return (NULL);
-	left_str = set_line(line)
-	return (line)
+	left_str = set_line(line);
+	return (line):
 }
