@@ -5,21 +5,22 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jdorazio <jdorazio@student.42.madrid.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/01 07:05:49 by jdorazio          #+#    #+#             */
-/*   Updated: 2024/10/02 16:30:02 by jdorazio         ###   ########.fr       */
+/*   Created: 2024/10/04 10:28:26 by jdorazio          #+#    #+#             */
+/*   Updated: 2024/10/04 11:18:47 by jdorazio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-size_t	ft_strlen(const char *s)
+void	ft_bzero(void *s, size_t n)
 {
-	size_t	len;
+	size_t			i;
+	unsigned char	*ptr;
 
-	len = 0;
-	while (s[len])
-		len++;
-	return (len);
+	ptr = (unsigned char *)s;
+	i = 0;
+	while (i < n)
+		ptr[i++] = 0;
 }
 
 void	*ft_calloc(size_t nmemb, size_t size)
@@ -31,17 +32,6 @@ void	*ft_calloc(size_t nmemb, size_t size)
 		return (NULL);
 	ft_bzero(ptr, nmemb * size);
 	return (ptr);
-}
-
-void	ft_bzero(void *s, size_t n)
-{
-	size_t			i;
-	unsigned char	*ptr;
-
-	ptr = (unsigned char *)s;
-	i = 0;
-	while (i < n)
-		ptr[i++] = 0;
 }
 
 char	*ft_strjoin(char const *s1, char const *s2)
@@ -72,18 +62,54 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (ptr);
 }
 
-char	*ft_strchr(const char	*s, int c)
+char	*ft_strdup(const char *s)
 {
-	int		i;
+	char	*ptr;
+	int		len;
+
+	len = ft_strlen(s);
+	ptr = malloc(len + 1);
+	if (ptr == NULL)
+		return (NULL);
+	ft_strlcpy(ptr, s, len + 1);
+	return (ptr);
+}
+
+size_t	ft_strlen(const char *s)
+{
+	size_t	len;
+
+	len = 0;
+	while (s[len])
+		len++;
+	return (len);
+}
+
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	char	*ptr;
+	size_t	i;
+	size_t	alloc_size;
+	size_t	start1;
 
 	i = 0;
-	while (s[i])
+	start1 = (size_t) start;
+	if (!s)
+		return (NULL);
+	if (start1 > ft_strlen(s))
+		return (ft_strdup(""));
+	if (len > ft_strlen(s) - start1)
+		alloc_size = ft_strlen(s) - start1;
+	else
+		alloc_size = len;
+	ptr = malloc(alloc_size + 1);
+	if (ptr == NULL)
+		return (0);
+	while (i < len && s[start1 + i])
 	{
-		if (s[i] == (char) c)
-			return ((char *)&s[i]);
+		ptr[i] = (char )s[start1 + i];
 		i++;
 	}
-	if ((char) c == '\0')
-		return ((char *)&s[i]);
-	return (NULL);
+	ptr[i] = '\0';
+	return (ptr);
 }
