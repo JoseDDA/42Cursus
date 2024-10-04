@@ -22,7 +22,7 @@ char	*set_line(char *line_buffer)
 		i++;
 	if (line_buffer[i] == 0 || line_buffer[1] == 0)
 		return (NULL);
-	left_str = ft_substr(line_buffer, i + 1, ft_strlen(line_buffer) - i)
+	left_str = ft_substr(line_buffer, i + 1, ft_strlen(line_buffer) - i);
 	if (*left_str == 0)
 	{
 		free(left_str);
@@ -76,5 +76,5 @@ char	*get_next_line(int fd)
 	if (!line)
 		return (NULL);
 	left_str = set_line(line);
-	return (line):
+	return (line);
 }
