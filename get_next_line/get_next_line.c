@@ -6,7 +6,7 @@
 /*   By: jdorazio <jdorazio@student.42.madrid.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 18:35:39 by jdorazio          #+#    #+#             */
-/*   Updated: 2024/10/07 20:54:18 by jdorazio         ###   ########.fr       */
+/*   Updated: 2024/10/07 21:56:49 by jdorazio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,7 @@ char	*ft_update_string(char *left_string)
 	while (left_string[i])
 		temp[j++] = left_string[i++];
 	temp[j] = '\0';
-	if (left_string)
-		free(left_string);
+	free(left_string);
 	return (temp);
 }
 
@@ -118,8 +117,11 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 	{
-		free(left_string);
-		left_string = NULL;	
+		if (left_string)
+		{
+			free(left_string);
+			left_string = NULL;	
+		}
 		return (NULL);
 	}
 	left_string = ft_read_to_buffer(fd, left_string);
@@ -132,6 +134,7 @@ char	*get_next_line(int fd)
 	if (!extract_line)
 	{
 		free(left_string);
+		left_string = NULL;
 		return (NULL);
 	}
 	left_string = ft_update_string(left_string);
