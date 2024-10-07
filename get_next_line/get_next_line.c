@@ -12,6 +12,12 @@
 
 #include "get_next_line.h"
 
+void	*ft_free(char *buf)
+{
+	free(buf);
+	return (NULL);
+}
+
 size_t	ft_strlen(const char *s)
 {
 	size_t	i;
@@ -86,10 +92,7 @@ char	*ft_read_to_buffer(int fd, char *left_string)
 	{
 		b_read = read(fd, buffer, BUFFER_SIZE);
 		if (b_read == -1)
-		{
-			free(buffer);
-			return (NULL);
-		}
+			return (ft_free(buffer));
 		if (b_read == 0)
 			break ;
 		buffer[b_read] = '\0';
@@ -99,10 +102,7 @@ char	*ft_read_to_buffer(int fd, char *left_string)
 		left_string = ft_strjoin(temp, buffer);
 		free(temp);
 		if (!left_string)
-		{
-			free(buffer);
-			return (NULL);
-		}
+			return (ft_free(buffer));
 		if (ft_strchr(buffer, '\n'))
 			break ;
 	}
@@ -120,23 +120,18 @@ char	*get_next_line(int fd)
 		if (left_string)
 		{
 			free(left_string);
-			left_string = NULL;	
+			left_string = NULL;
 		}
 		return (NULL);
 	}
 	left_string = ft_read_to_buffer(fd, left_string);
 	if (!left_string)
-	{
-		free(left_string);	
-		return (NULL);
-	}
+		return (ft_free(left_string));
 	extract_line = ft_extract_line(left_string);
 	if (!extract_line)
-	{
-		free(left_string);
-		left_string = NULL;
-		return (NULL);
-	}
+		return (ft_free(left_string));
 	left_string = ft_update_string(left_string);
+	if (!left_string)
+		return (NULL);
 	return (extract_line);
 }
