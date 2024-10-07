@@ -12,6 +12,16 @@
 
 #include "get_next_line.h"
 
+size_t	ft_strlen(const char *s)
+{
+	size_t	i;
+
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
+}
+
 char	*ft_update_string(char *left_string)
 {
 	char	*temp;
@@ -103,7 +113,7 @@ char	*get_next_line(int fd)
 	left_string = ft_read_to_buffer(fd, left_string);
 	if (!left_string)
 		return (NULL);
-	extract_line = ft_extact_line(left_string);
+	extract_line = ft_extract_line(left_string);
 	left_string = ft_update_string(left_string);
 	return (extract_line);
 }
