@@ -6,7 +6,7 @@
 /*   By: jdorazio <jdorazio@student.42.madrid.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 11:37:42 by jdorazio          #+#    #+#             */
-/*   Updated: 2024/10/07 13:01:41 by jdorazio         ###   ########.fr       */
+/*   Updated: 2024/10/07 14:10:55 by jdorazio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,12 @@ size_t	ft_strlen(const char *s)
 	return (len);
 }
 
+char	*ft_free(char *buffer)
+{
+	free(buffer)
+	return (NULL);
+}
+
 char	*ft_read(int fd, char *buffer, char *left_string)
 {
 	ssize_t	bytes_read;
@@ -32,15 +38,17 @@ char	*ft_read(int fd, char *buffer, char *left_string)
 	{
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (bytes_read == -1)
-			return (NULL);
-		else if (bytes_read == 0)
-			return (NULL);
+			return(ft_free(buffer));
+		else if (bytes_read == 0 && !left_string)
+			return(ft_free(buffer));
 		buffer[bytes_read] = 0;
 		if (!left_string)
 			left_string = ft_strdup(" ");
 		temp = left_string;
 		left_string = ft_strjoin(temp, buffer);
 		free(temp);
+		if (!left_string)
+			return (NULL);
 		temp = NULL;
 		if (ft_strchr(buffer, '\n'))
 			break ;
@@ -50,22 +58,28 @@ char	*ft_read(int fd, char *buffer, char *left_string)
 
 char	*ft_update_line(char *line)
 {
-	int	i;
+	int		i;
 	char	*next_line;
 
 	i = 0;
+	if (!line)
+		return (NULL);
 	while (line[i] && line[i] != '\n')
 		i++;
 	if (line[i] == 0 || line[1] == 0)
-		return (NULL);
-	next_line = ft_substr(line, i + 1, ft_strlen(line) - i);
-	if (*next_line == 0)
 	{
-		free(next_line);
+		free(line);
+		return (NULL);
+	}
+	next_line = ft_substr(line, i + 1, ft_strlen(line) - i);
+	if (!next_line)
+	{
+		free(line);
 		return (NULL);
 	}
 	line[i + 1] = 0;
-	return (line);
+	free(line);
+	return (next_line);
 }
 
 char	*get_next_line(int fd)
@@ -80,6 +94,11 @@ char	*get_next_line(int fd)
 	if (!buffer)
 		return (NULL);
 	line = ft_read(fd, buffer, left_string);
+	if (!line)
+	{
+		free(buffer)
+		return (NULL);
+	}
 	left_string = ft_update_line(line);
 	return (line);
 }
