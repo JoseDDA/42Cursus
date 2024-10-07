@@ -40,10 +40,7 @@ char	*ft_read(int fd, char *buffer, char *left_string)
 		if (bytes_read == -1)
 			return(ft_free(buffer));
 		else if (bytes_read == 0)
-		{
-			free(buffer);
-			return(left_string);
-		}
+			break ;
 		buffer[bytes_read] = 0;
 		if (!left_string)
 			left_string = ft_strdup(" ");
@@ -51,7 +48,7 @@ char	*ft_read(int fd, char *buffer, char *left_string)
 		left_string = ft_strjoin(temp, buffer);
 		free(temp);
 		if (!left_string)
-			return (NULL);
+			return (ft_free(buffer));
 		temp = NULL;
 		if (ft_strchr(buffer, '\n'))
 			break ;
@@ -68,17 +65,11 @@ char	*ft_update_line(char *line)
 	i = 0;
 	while (line[i] && line[i] != '\n')
 		i++;
-	if (line[i] == 0 || line[1] == 0)
-	{
-		free(line);
-		return (NULL);
-	}
+	if (line[i] == 0)
+		return(ft_free(line));
 	next_line = ft_substr(line, i + 1, ft_strlen(line) - i);
 	if (!next_line)
-	{
-		free(line);
-		return (NULL);
-	}
+		return(ft_free(line));
 	line[i + 1] = 0;
 	return (next_line);
 }
@@ -90,16 +81,17 @@ char	*get_next_line(int fd)
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	{
+		free(left_string);
+		left_string = NULL;
 		return (NULL);
+	}
 	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buffer)
 		return (NULL);
 	line = ft_read(fd, buffer, left_string);
 	if (!line)
-	{
-		free(buffer);
 		return (NULL);
-	}
 	left_string = ft_update_line(line);
 	return (line);
 }
