@@ -42,7 +42,8 @@ char	*ft_update_string(char *left_string)
 	while (left_string[i])
 		temp[j++] = left_string[i++];
 	temp[j] = '\0';
-	free(left_string);
+	if (left_string)
+		free(left_string);
 	return (temp);
 }
 
@@ -121,22 +122,16 @@ char	*get_next_line(int fd)
 	if (!left_string)
 		return (NULL);
 	extract_line = ft_extract_line(left_string);
+	if (!extract_line)
+	{
+		free(left_string);
+		return (NULL);
+	}
 	left_string = ft_update_string(left_string);
+	if (!left_string)
+	{
+		free(left_string);
+		return (NULL);
+	}
 	return (extract_line);
-}
-int main() {
-    int fd = open("test.txt", O_RDONLY); // Open the test file
-    if (fd < 0) {
-        perror("Error opening file");
-        return 1;
-    }
-
-    char *line;
-    while ((line = get_next_line(fd)) != NULL) { // Read each line
-        printf("%s", line); // Print the line
-        free(line); // Free the line after use
-    }
-
-    close(fd); // Close the file descriptor
-    return 0; // Return success
 }
