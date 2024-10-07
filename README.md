@@ -1,2 +1,2 @@
 # 42Cursus
-42 Cursus Private Git
+42 Common Core
