@@ -6,7 +6,7 @@
 /*   By: jdorazio <jdorazio@student.42.madrid.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 18:35:39 by jdorazio          #+#    #+#             */
-/*   Updated: 2024/10/07 19:28:28 by jdorazio         ###   ########.fr       */
+/*   Updated: 2024/10/07 20:54:18 by jdorazio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,9 @@ char	*ft_update_string(char *left_string)
 	int		j;
 
 	i = 0;
-	while (left_string[i] != '\0' && left_string[i] != '\n')
+	if (!left_string)
+		return (NULL);
+	while (left_string[i] && left_string[i] != '\n')
 		i++;
 	if (left_string[i] == '\n')
 		i++;
@@ -37,7 +39,7 @@ char	*ft_update_string(char *left_string)
 	if (!temp)
 		return (NULL);
 	j = 0;
-	while (left_string[i] != '\0')
+	while (left_string[i])
 		temp[j++] = left_string[i++];
 	temp[j] = '\0';
 	free(left_string);
@@ -47,9 +49,13 @@ char	*ft_update_string(char *left_string)
 char	*ft_extract_line(char *left_string)
 {
 	int 	i;
+	int		j;
 	char	*extract_line;
 
 	i = 0;
+	j = 0;
+	if (!left_string || *left_string == '\0')
+		return (NULL);
 	while (left_string[i] != '\0' && left_string[i] != '\n')
 		i++;
 	if (left_string[i] == '\n')
@@ -57,18 +63,15 @@ char	*ft_extract_line(char *left_string)
 	extract_line = malloc((i + 1) * sizeof(char));
 	if (!extract_line)
 		return (NULL);
-	i = 0;
-	while (left_string[i] != '\0' && left_string[i] != '\n')
+	while (j < i)
 	{
-		extract_line[i] = left_string[i];
-		i++;
+		extract_line[j] = left_string[j];
+		j++;
 	}
-	if (left_string[i] == '\n')
-		extract_line[i++] = '\n';
-	extract_line[i] = '\0';
+	extract_line[j] = '\0';
 	return (extract_line);
 }
-
+// this is working
 char	*ft_read_to_buffer(int fd, char *left_string)
 {
 	char	*temp;
@@ -87,7 +90,11 @@ char	*ft_read_to_buffer(int fd, char *left_string)
 		free(buffer);
 		return (NULL);
 		}
+		if (b_read == 0)
+			break;
 		buffer[b_read] = '\0';
+		if (!left_string)
+			left_string = ft_strdup("");
 		temp = left_string;
 		left_string = ft_strjoin(temp, buffer);
 		free(temp);
@@ -116,4 +123,20 @@ char	*get_next_line(int fd)
 	extract_line = ft_extract_line(left_string);
 	left_string = ft_update_string(left_string);
 	return (extract_line);
+}
+int main() {
+    int fd = open("test.txt", O_RDONLY); // Open the test file
+    if (fd < 0) {
+        perror("Error opening file");
+        return 1;
+    }
+
+    char *line;
+    while ((line = get_next_line(fd)) != NULL) { // Read each line
+        printf("%s", line); // Print the line
+        free(line); // Free the line after use
+    }
+
+    close(fd); // Close the file descriptor
+    return 0; // Return success
 }

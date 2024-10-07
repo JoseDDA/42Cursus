@@ -6,7 +6,7 @@
 /*   By: jdorazio <jdorazio@student.42.madrid.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 11:39:24 by jdorazio          #+#    #+#             */
-/*   Updated: 2024/10/07 12:32:32 by jdorazio         ###   ########.fr       */
+/*   Updated: 2024/10/07 20:06:23 by jdorazio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <aio.h>
 # include <stdlib.h>
 # include <limits.h>
+# include <fcntl.h>
 
 char	*get_next_line(int fd);
 char	*ft_strdup(const char *s);
