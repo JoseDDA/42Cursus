@@ -6,27 +6,12 @@
 /*   By: jdorazio <jdorazio@student.42.madrid.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 18:35:39 by jdorazio          #+#    #+#             */
-/*   Updated: 2024/10/07 21:56:49 by jdorazio         ###   ########.fr       */
+/*   Updated: 2024/10/07 22:32:53 by jdorazio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void	*ft_free(char *buf)
-{
-	free(buf);
-	return (NULL);
-}
-
-size_t	ft_strlen(const char *s)
-{
-	size_t	i;
-
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
-}
 
 char	*ft_update_string(char *left_string)
 {
@@ -78,6 +63,19 @@ char	*ft_extract_line(char *left_string)
 	return (extract_line);
 }
 
+void	*ft_free(char *left_string, char *buffer)
+{
+	char	*temp;
+
+	if (!left_string)
+		left_string = ft_strdup("");
+	temp = left_string;
+	left_string = ft_strjoin(temp,buffer);
+	free(temp);
+	return (left_string);
+
+}
+
 char	*ft_read_to_buffer(int fd, char *left_string)
 {
 	char	*temp;
@@ -87,24 +85,18 @@ char	*ft_read_to_buffer(int fd, char *left_string)
 	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buffer)
 		return (NULL);
-	b_read = 1;
+	b_read = read(fd, buffer, BUFFER_SIZE);;
 	while (b_read > 0)
 	{
-		b_read = read(fd, buffer, BUFFER_SIZE);
-		if (b_read == -1)
-			return (ft_free(buffer));
-		if (b_read == 0)
-			break ;
 		buffer[b_read] = '\0';
-		if (!left_string)
-			left_string = ft_strdup("");
-		temp = left_string;
-		left_string = ft_strjoin(temp, buffer);
-		free(temp);
-		if (!left_string)
-			return (ft_free(buffer));
+		left_string = ft_free(left_string, buffer);
 		if (ft_strchr(buffer, '\n'))
 			break ;
+	}
+	if (b_read == -1)
+	{
+		free(buffer);
+		return (NULL);
 	}
 	free(buffer);
 	return (left_string);
@@ -126,10 +118,16 @@ char	*get_next_line(int fd)
 	}
 	left_string = ft_read_to_buffer(fd, left_string);
 	if (!left_string)
-		return (ft_free(left_string));
+	{
+		free(left_string);
+		return (NULL);
+	}
 	extract_line = ft_extract_line(left_string);
 	if (!extract_line)
-		return (ft_free(left_string));
+	{
+		free(left_string);
+		return (NULL);	
+	}
 	left_string = ft_update_string(left_string);
 	if (!left_string)
 		return (NULL);
