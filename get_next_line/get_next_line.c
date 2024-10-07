@@ -6,7 +6,7 @@
 /*   By: jdorazio <jdorazio@student.42.madrid.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 11:37:42 by jdorazio          #+#    #+#             */
-/*   Updated: 2024/10/07 14:34:43 by jdorazio         ###   ########.fr       */
+/*   Updated: 2024/10/07 18:26:32 by jdorazio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,15 @@ char	*ft_read(int fd, char *buffer, char *left_string)
 	{
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (bytes_read == -1)
+		{
+			free(left_string);
 			return(ft_free(buffer));
+		}
 		else if (bytes_read == 0)
 			break ;
-		buffer[bytes_read] = 0;
+		buffer[bytes_read] = '\0';
 		if (!left_string)
-			left_string = ft_strdup(" ");
+			left_string = ft_strdup("");
 		temp = left_string;
 		left_string = ft_strjoin(temp, buffer);
 		free(temp);
