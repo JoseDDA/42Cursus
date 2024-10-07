@@ -12,7 +12,6 @@
 
 #include "get_next_line.h"
 
-
 char	*ft_update_string(char *left_string)
 {
 	char	*temp;
@@ -73,30 +72,31 @@ void	*ft_free(char *left_string, char *buffer)
 	left_string = ft_strjoin(temp,buffer);
 	free(temp);
 	return (left_string);
-
 }
 
 char	*ft_read_to_buffer(int fd, char *left_string)
 {
-	char	*temp;
 	int		b_read;
 	char	*buffer;
 
 	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buffer)
 		return (NULL);
-	b_read = read(fd, buffer, BUFFER_SIZE);;
+	b_read = 1;
 	while (b_read > 0)
 	{
+		b_read = read(fd, buffer, BUFFER_SIZE);;
+		if (b_read == -1)
+		{
+			free(buffer);
+			return (NULL);
+		}
+		if (b_read == 0)
+			break;
 		buffer[b_read] = '\0';
 		left_string = ft_free(left_string, buffer);
 		if (ft_strchr(buffer, '\n'))
 			break ;
-	}
-	if (b_read == -1)
-	{
-		free(buffer);
-		return (NULL);
 	}
 	free(buffer);
 	return (left_string);
