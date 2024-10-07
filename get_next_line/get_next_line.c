@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "get_next_line.h"
+#include "get_next_line.h"
 
 size_t	ft_strlen(const char *s)
 {
@@ -22,9 +22,9 @@ size_t	ft_strlen(const char *s)
 	return (len);
 }
 
-char	*ft_read(int fd, char buffer, char *left_string)
+char	*ft_read(int fd, char *buffer, char *left_string)
 {
-	ssize_t bytes_read;
+	ssize_t	bytes_read;
 	char	*temp;
 
 	bytes_read = 1;
@@ -32,18 +32,18 @@ char	*ft_read(int fd, char buffer, char *left_string)
 	{
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (bytes_read == -1)
-			return (NULL)
+			return (NULL);
 		else if (bytes_read == 0)
-			break;
+			return (NULL);
 		buffer[bytes_read] = 0;
 		if (!left_string)
-			left_string= ft_strdup(" ");
+			left_string = ft_strdup(" ");
 		temp = left_string;
-		left_string = ft_strjoin(temp,buffer);
+		left_string = ft_strjoin(temp, buffer);
 		free(temp);
 		temp = NULL;
 		if (ft_strchr(buffer, '\n'))
-			break;
+			break ;
 	}
 	return (left_string);
 }
@@ -52,13 +52,14 @@ char	*ft_update_line(char *line)
 {
 	int	i;
 	char	*next_line;
+
 	i = 0;
 	while (line[i] && line[i] != '\n')
 		i++;
-	if (line[i] == 0 ||line[1] == 0)
+	if (line[i] == 0 || line[1] == 0)
 		return (NULL);
 	next_line = ft_substr(line, i + 1, ft_strlen(line) - i);
-	if (*next_line  == 0)
+	if (*next_line == 0)
 	{
 		free(next_line);
 		return (NULL);
@@ -69,16 +70,16 @@ char	*ft_update_line(char *line)
 
 char	*get_next_line(int fd)
 {
-	char	*buffer
+	char		*buffer;
 	static char	*left_string;
-	char	*line;
+	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 		return (NULL);
-	buffer = malloc((BUFFER_SIZE + 1) * sizeof(CHAR));
-	if (!buffer, left_string)
+	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (!buffer)
 		return (NULL);
 	line = ft_read(fd, buffer, left_string);
-	left_string = ft_update_line(buffer, left_string, line);
+	left_string = ft_update_line(line);
 	return (line);
 }
