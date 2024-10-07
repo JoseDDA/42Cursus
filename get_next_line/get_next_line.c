@@ -24,7 +24,7 @@ size_t	ft_strlen(const char *s)
 
 char	*ft_free(char *buffer)
 {
-	free(buffer)
+	free(buffer);
 	return (NULL);
 }
 
@@ -96,7 +96,7 @@ char	*get_next_line(int fd)
 	line = ft_read(fd, buffer, left_string);
 	if (!line)
 	{
-		free(buffer)
+		free(buffer);
 		return (NULL);
 	}
 	left_string = ft_update_line(line);
