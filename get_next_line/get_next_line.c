@@ -49,7 +49,7 @@ char	*ft_update_string(char *left_string)
 
 char	*ft_extract_line(char *left_string)
 {
-	int 	i;
+	int		i;
 	int		j;
 	char	*extract_line;
 
@@ -72,7 +72,7 @@ char	*ft_extract_line(char *left_string)
 	extract_line[j] = '\0';
 	return (extract_line);
 }
-// this is working
+
 char	*ft_read_to_buffer(int fd, char *left_string)
 {
 	char	*temp;
@@ -88,11 +88,11 @@ char	*ft_read_to_buffer(int fd, char *left_string)
 		b_read = read(fd, buffer, BUFFER_SIZE);
 		if (b_read == -1)
 		{
-		free(buffer);
-		return (NULL);
+			free(buffer);
+			return (NULL);
 		}
 		if (b_read == 0)
-			break;
+			break ;
 		buffer[b_read] = '\0';
 		if (!left_string)
 			left_string = ft_strdup("");
@@ -105,7 +105,7 @@ char	*ft_read_to_buffer(int fd, char *left_string)
 			return (NULL);
 		}
 		if (ft_strchr(buffer, '\n'))
-			break;
+			break ;
 	}
 	free(buffer);
 	return (left_string);
@@ -114,13 +114,20 @@ char	*ft_read_to_buffer(int fd, char *left_string)
 char	*get_next_line(int fd)
 {
 	static char	*left_string;
-	char	*extract_line;
+	char		*extract_line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	{
+		free(left_string);
+		left_string = NULL;	
 		return (NULL);
+	}
 	left_string = ft_read_to_buffer(fd, left_string);
 	if (!left_string)
+	{
+		free(left_string);	
 		return (NULL);
+	}
 	extract_line = ft_extract_line(left_string);
 	if (!extract_line)
 	{
@@ -128,10 +135,5 @@ char	*get_next_line(int fd)
 		return (NULL);
 	}
 	left_string = ft_update_string(left_string);
-	if (!left_string)
-	{
-		free(left_string);
-		return (NULL);
-	}
 	return (extract_line);
 }
