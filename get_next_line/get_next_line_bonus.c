@@ -6,11 +6,11 @@
 /*   By: jdorazio <jdorazio@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 10:48:34 by jdorazio          #+#    #+#             */
-/*   Updated: 2024/10/08 11:08:29 by jdorazio         ###   ########.fr       */
+/*   Updated: 2024/10/09 12:41:58 by jdorazio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*ft_update_string(char *left_string)
 {
@@ -26,6 +26,8 @@ char	*ft_update_string(char *left_string)
 		i++;
 	if (left_string[i] == '\n')
 		i++;
+	if (left_string[i] == '\0')
+		return (NULL);
 	update_string = malloc((ft_strlen(left_string) - i + 1) * sizeof(char));
 	if (!update_string)
 		return (NULL);
@@ -103,29 +105,29 @@ char	*ft_read_to_buffer(int fd, char *left_string)
 
 char	*get_next_line(int fd)
 {
-	static char	*left_string;
+	static char	*left_string[OPEN_MAX];
 	char		*extract_line;
 	char		*update_string;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd >= OPEN_MAX || read(fd, 0, 0) < 0)
 	{
-		if (left_string)
+		if (left_string[fd])
 		{
-			free(left_string);
-			left_string = NULL;
+			free(left_string[fd]);
+			left_string[fd] = NULL;
 		}
 		return (NULL);
 	}
-	left_string = ft_read_to_buffer(fd, left_string);
-	extract_line = ft_extract_line(left_string);
+	left_string[fd] = ft_read_to_buffer(fd, left_string[fd]);
+	extract_line = ft_extract_line(left_string[fd]);
 	if (!extract_line)
 	{
-		free(left_string);
-		left_string = NULL;
+		free(left_string[fd]);
+		left_string[fd] = NULL;
 		return (NULL);
 	}
-	update_string = ft_update_string(left_string);
-	free(left_string);
-	left_string = update_string;
+	update_string = ft_update_string(left_string[fd]);
+	free(left_string[fd]);
+	left_string[fd] = update_string;
 	return (extract_line);
 }

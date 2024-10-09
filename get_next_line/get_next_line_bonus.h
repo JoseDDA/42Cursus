@@ -6,7 +6,7 @@
 /*   By: jdorazio <jdorazio@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 10:47:58 by jdorazio          #+#    #+#             */
-/*   Updated: 2024/10/08 10:48:22 by jdorazio         ###   ########.fr       */
+/*   Updated: 2024/10/09 12:37:29 by jdorazio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,10 @@
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 10
+# endif
+
+# ifndef OPEN_MAX
+#  define OPEN_MAX 1024
 # endif
 
 # include <stdio.h>

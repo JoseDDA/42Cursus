@@ -6,7 +6,7 @@
 /*   By: jdorazio <jdorazio@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 18:35:39 by jdorazio          #+#    #+#             */
-/*   Updated: 2024/10/08 11:08:46 by jdorazio         ###   ########.fr       */
+/*   Updated: 2024/10/09 12:42:35 by jdorazio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ char	*ft_update_string(char *left_string)
 		i++;
 	if (left_string[i] == '\n')
 		i++;
+	if (left_string[i] == '\0')
+		return (NULL);
 	update_string = malloc((ft_strlen(left_string) - i + 1) * sizeof(char));
 	if (!update_string)
 		return (NULL);
