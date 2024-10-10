@@ -6,7 +6,7 @@
 /*   By: jdorazio <jdorazio@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 18:35:39 by jdorazio          #+#    #+#             */
-/*   Updated: 2024/10/09 12:42:35 by jdorazio         ###   ########.fr       */
+/*   Updated: 2024/10/10 19:27:51 by jdorazio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,23 @@ char	*ft_update_string(char *left_string)
 		return (NULL);
 	while (left_string[i] && left_string[i] != '\n')
 		i++;
-	if (left_string[i] == '\n')
+	while (left_string[i] == '\n')
 		i++;
 	if (left_string[i] == '\0')
+	{
+		free(left_string);
 		return (NULL);
+	}
 	update_string = malloc((ft_strlen(left_string) - i + 1) * sizeof(char));
 	if (!update_string)
+	{
+		free(left_string);
 		return (NULL);
+	}
 	while (left_string[i])
 		update_string[j++] = left_string[i++];
 	update_string[j] = '\0';
+	free(left_string);
 	return (update_string);
 }
 
@@ -47,7 +54,7 @@ char	*ft_extract_line(char *left_string)
 	j = 0;
 	if (!left_string || *left_string == '\0')
 		return (NULL);
-	while (left_string[i] != '\0' && left_string[i] != '\n')
+	while (left_string[i] && left_string[i] != '\n')
 		i++;
 	if (left_string[i] == '\n')
 		i++;
@@ -90,6 +97,7 @@ char	*ft_read_to_buffer(int fd, char *left_string)
 		if (b_read == -1)
 		{
 			free(buffer);
+			free(left_string);
 			return (NULL);
 		}
 		if (b_read == 0)
@@ -112,10 +120,7 @@ char	*get_next_line(int fd)
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 	{
 		if (left_string)
-		{
 			free(left_string);
-			left_string = NULL;
-		}
 		return (NULL);
 	}
 	left_string = ft_read_to_buffer(fd, left_string);
@@ -127,7 +132,6 @@ char	*get_next_line(int fd)
 		return (NULL);
 	}
 	update_string = ft_update_string(left_string);
-	free(left_string);
 	left_string = update_string;
 	return (extract_line);
 }
